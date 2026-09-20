@@ -53,14 +53,17 @@ export default function PatientProfile() {
 
         {/* Action buttons */}
         <div className="flex flex-wrap gap-3">
-          <Link to={`/patients/${patientId}/assessment`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg">
+          <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg">
             New Assessment
-          </Link>
-          <Link to={`/patients/${patientId}/ecg`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg">
-            Capture ECG
+          </button>
+          <Link
+            to={`/patients/${patientId}/ecg`}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg inline-block"
+          >
+            📷 Capture ECG
           </Link>
           <button className="px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg">
-            Refer for review
+            📤 Refer for review
           </button>
         </div>
       </div>

@@ -7,6 +7,7 @@ import EcgsPage from './pages/EcgsPage';
 import ReferralsPage from './pages/ReferralsPage';
 import FollowUpsPage from './pages/FollowUpsPage';
 import ReportsPage from './pages/ReportsPage';
+import EcgCaptureNew from './pages/EcgCaptureNew';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route index element={<Worklist />} />
           <Route path="patients" element={<PatientsList />} />
           <Route path="patients/:patientId" element={<PatientProfile />} />
+          <Route path="patients/:patientId/ecg" element={<EcgCaptureNew />} />
           <Route path="ecgs" element={<EcgsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
           <Route path="followups" element={<FollowUpsPage />} />

@@ -2,7 +2,7 @@
 // Simulated async with ~200ms latency
 // Swapping to Supabase only requires changing these functions
 
-import { seedPatients, seedFacilities, seedClinicians } from './seed/patients';
+import { seedPatients, seedFacilities, seedClinicians, seedReferrals, seedFollowUps } from './seed/patients';
 import { seedAssessments, seedEcgStudies, seedEcgAnalyses, seedEcgReviews } from './seed/ecgAndAssessments';
 import * as eventLog from './eventLog';
 
@@ -254,6 +254,61 @@ export async function signEcgReview(reviewId, clinicianId) {
     });
   }
   return review;
+}
+
+// Referral repositories
+export async function listReferrals(status = null) {
+  await delay(LATENCY);
+  if (status) {
+    return seedReferrals.filter(r => r.status === status);
+  }
+  return seedReferrals;
+}
+
+export async function getReferral(id) {
+  await delay(LATENCY);
+  return seedReferrals.find(r => r.id === id) || null;
+}
+
+export async function createReferral(data) {
+  await delay(LATENCY);
+  const id = `REF-${String(seedReferrals.length + 100).slice(-3)}`;
+  const referral = {
+    id,
+    ...data,
+    createdAt: new Date(),
+    respondedAt: null,
+    response: null
+  };
+  seedReferrals.push(referral);
+  return referral;
+}
+
+// Follow-up repositories
+export async function listFollowUps(status = null) {
+  await delay(LATENCY);
+  if (status) {
+    return seedFollowUps.filter(f => f.status === status);
+  }
+  return seedFollowUps;
+}
+
+export async function getFollowUp(id) {
+  await delay(LATENCY);
+  return seedFollowUps.find(f => f.id === id) || null;
+}
+
+export async function createFollowUp(data) {
+  await delay(LATENCY);
+  const id = `FU-${String(seedFollowUps.length + 100).slice(-3)}`;
+  const followUp = {
+    id,
+    ...data,
+    completedAt: null,
+    outcome: null
+  };
+  seedFollowUps.push(followUp);
+  return followUp;
 }
 
 // Event log access

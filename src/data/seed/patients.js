@@ -283,3 +283,83 @@ export const seedClinicians = [
     facilityId: 'fac-003'
   }
 ];
+
+export const seedReferrals = [
+  {
+    id: 'REF-001',
+    patientId: 'CTK-00101',
+    ecgStudyId: 'ECG-00301',
+    fromClinicianId: 'cli-001',
+    fromFacilityId: 'fac-001',
+    toFacilityId: 'fac-003',
+    toClinicianId: 'cli-004',
+    reason: 'Urgent ECG with ST elevation in inferior leads - possible acute MI',
+    urgency: 'urgent',
+    status: 'requested',
+    createdAt: new Date('2024-09-20T10:45:00'),
+    respondedAt: null,
+    response: null
+  },
+  {
+    id: 'REF-002',
+    patientId: 'CTK-00117',
+    ecgStudyId: 'ECG-00302',
+    fromClinicianId: 'cli-002',
+    fromFacilityId: 'fac-002',
+    toFacilityId: 'fac-003',
+    toClinicianId: 'cli-005',
+    reason: 'Post-MI patient with recurrent chest discomfort - requires cardiology review',
+    urgency: 'soon',
+    status: 'accepted',
+    createdAt: new Date('2024-09-18T14:30:00'),
+    respondedAt: new Date('2024-09-18T16:15:00'),
+    response: 'Case reviewed. Continue current medications, schedule echo in 2 weeks.'
+  }
+];
+
+export const seedFollowUps = [
+  {
+    id: 'FU-001',
+    patientId: 'CTK-00101',
+    reason: 'Post-MI assessment and ECG repeat',
+    dueDate: new Date('2024-10-02'),
+    status: 'due',
+    channel: 'clinic_visit',
+    assignedTo: 'cli-001',
+    completedAt: null,
+    outcome: null
+  },
+  {
+    id: 'FU-002',
+    patientId: 'CTK-00103',
+    reason: 'Chest discomfort follow-up',
+    dueDate: new Date('2024-09-25'),
+    status: 'overdue',
+    channel: 'clinic_visit',
+    assignedTo: 'cli-002',
+    completedAt: null,
+    outcome: null
+  },
+  {
+    id: 'FU-003',
+    patientId: 'CTK-00105',
+    reason: 'Heart failure reassessment',
+    dueDate: new Date('2024-10-15'),
+    status: 'scheduled',
+    channel: 'clinic_visit',
+    assignedTo: 'cli-001',
+    completedAt: null,
+    outcome: null
+  },
+  {
+    id: 'FU-004',
+    patientId: 'CTK-00108',
+    reason: 'Routine cardiovascular screening',
+    dueDate: new Date('2024-12-18'),
+    status: 'scheduled',
+    channel: 'phone',
+    assignedTo: 'cli-001',
+    completedAt: null,
+    outcome: null
+  }
+];
