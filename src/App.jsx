@@ -1,29 +1,25 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Patients from './pages/Patients';
+import Worklist from './pages/Worklist';
+import PatientsList from './pages/PatientsList';
 import PatientProfile from './pages/PatientProfile';
-import Assessment from './pages/Assessment';
-import ECGAnalysis from './pages/ECGAnalysis';
-import Investigations from './pages/Investigations';
-import FollowUps from './pages/FollowUps';
-import Reports from './pages/Reports';
-import Settings from './pages/Settings';
+import EcgsPage from './pages/EcgsPage';
+import ReferralsPage from './pages/ReferralsPage';
+import FollowUpsPage from './pages/FollowUpsPage';
+import ReportsPage from './pages/ReportsPage';
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="patients" element={<Patients />} />
+          <Route index element={<Worklist />} />
+          <Route path="patients" element={<PatientsList />} />
           <Route path="patients/:patientId" element={<PatientProfile />} />
-          <Route path="patients/:patientId/assessment" element={<Assessment />} />
-          <Route path="patients/:patientId/ecg" element={<ECGAnalysis />} />
-          <Route path="investigations" element={<Investigations />} />
-          <Route path="followups" element={<FollowUps />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="ecgs" element={<EcgsPage />} />
+          <Route path="referrals" element={<ReferralsPage />} />
+          <Route path="followups" element={<FollowUpsPage />} />
+          <Route path="reports" element={<ReportsPage />} />
         </Route>
       </Routes>
     </Router>

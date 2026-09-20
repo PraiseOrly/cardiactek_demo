@@ -1,42 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Plus } from 'lucide-react';
-import { mockPatients, mockAssessments, mockECGs, mockInvestigations } from '../data/mockData';
+import { ArrowLeft } from 'lucide-react';
+import * as repositories from '../data/repositories';
+import * as vocab from '../domain/vocabulary';
 import PatientOverview from '../components/PatientOverview';
 import PatientAssessments from '../components/PatientAssessments';
-import PatientECGs from '../components/PatientECGs';
-import PatientInvestigations from '../components/PatientInvestigations';
+import PatientEcgs from '../components/PatientEcgs';
 
-const tabs = ['Overview', 'Assessments', 'ECGs', 'Investigations', 'Follow-ups', 'Notes'];
+const tabs = ['Overview', 'Assessments', 'ECGs'];
 
 export default function PatientProfile() {
   const { patientId } = useParams();
+  const [patient, setPatient] = useState(null);
   const [activeTab, setActiveTab] = useState('Overview');
+  const [loading, setLoading] = useState(true);
 
-  const patient = mockPatients.find((p) => p.id === patientId);
+  useEffect(() => {
+    async function load() {
+      const p = await repositories.getPatient(patientId);
+      setPatient(p);
+      setLoading(false);
+    }
+    load();
+  }, [patientId]);
 
-  if (!patient) {
-    return (
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg p-8 text-center">
-          <p className="text-gray-600">Patient not found</p>
-          <Link to="/patients" className="text-primary-600 hover:text-primary-700 font-medium mt-4 inline-block">
-            Back to Patients
-          </Link>
-        </div>
-      </div>
-    );
+  if (loading || !patient) {
+    return <div className="p-8">Loading...</div>;
   }
 
+  const age = new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
+
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
-      {/* Back button */}
-      <Link
-        to="/patients"
-        className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium mb-6"
-      >
+    <div className="p-8 max-w-7xl mx-auto">
+      {/* Back */}
+      <Link to="/patients" className="text-blue-600 hover:text-blue-700 text-sm font-medium mb-6 flex items-center gap-2">
         <ArrowLeft className="w-4 h-4" />
-        Back to Patients
+        Back to patients
       </Link>
 
       {/* Header */}
@@ -44,91 +43,50 @@ export default function PatientProfile() {
         <div className="flex items-start justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{patient.name}</h1>
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+            <div className="flex gap-4 text-sm text-gray-600 mt-2">
               <span>{patient.id}</span>
-              <span>{patient.age} years</span>
+              <span>{age}y</span>
               <span>{patient.sex}</span>
             </div>
           </div>
-          <span
-            className={`text-sm font-semibold px-4 py-2 rounded-full ${
-              patient.riskStatus === 'Very High'
-                ? 'bg-red-100 text-red-700'
-                : patient.riskStatus === 'High'
-                ? 'bg-orange-100 text-orange-700'
-                : patient.riskStatus === 'Moderate'
-                ? 'bg-yellow-100 text-yellow-700'
-                : 'bg-green-100 text-green-700'
-            }`}
-          >
-            {patient.riskStatus} Risk
-          </span>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 mt-6">
-          <Link
-            to={`/patients/${patientId}/assessment`}
-            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            <Plus className="w-4 h-4" />
+        {/* Action buttons */}
+        <div className="flex flex-wrap gap-3">
+          <Link to={`/patients/${patientId}/assessment`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg">
             New Assessment
           </Link>
-          <Link
-            to={`/patients/${patientId}/ecg`}
-            className="flex items-center gap-2 bg-primary-100 hover:bg-primary-200 text-primary-700 px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Upload ECG
+          <Link to={`/patients/${patientId}/ecg`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg">
+            Capture ECG
           </Link>
-          <button className="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg font-medium transition-colors">
-            Add Investigation
-          </button>
-          <button className="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg font-medium transition-colors">
-            Schedule Follow-up
-          </button>
-          <button className="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg font-medium transition-colors">
-            Generate Report
+          <button className="px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg">
+            Refer for review
           </button>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="bg-white border border-gray-200 rounded-lg">
-        <div className="border-b border-gray-200">
-          <div className="flex overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-4 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === tab
-                    ? 'border-primary-600 text-primary-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+        <div className="border-b border-gray-200 flex">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === tab
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {/* Tab Content */}
         <div className="p-6">
           {activeTab === 'Overview' && <PatientOverview patient={patient} />}
           {activeTab === 'Assessments' && <PatientAssessments patientId={patientId} />}
-          {activeTab === 'ECGs' && <PatientECGs patientId={patientId} />}
-          {activeTab === 'Investigations' && <PatientInvestigations patientId={patientId} />}
-          {activeTab === 'Follow-ups' && (
-            <div className="text-center py-8">
-              <p className="text-gray-600">Follow-ups content coming soon</p>
-            </div>
-          )}
-          {activeTab === 'Notes' && (
-            <div className="text-center py-8">
-              <p className="text-gray-600">Clinical notes coming soon</p>
-            </div>
-          )}
+          {activeTab === 'ECGs' && <PatientEcgs patientId={patientId} />}
         </div>
       </div>
     </div>
