@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-50;
+}
+
+.nav-active {
+  @apply bg-primary-100 text-primary-700 font-medium;
+}
